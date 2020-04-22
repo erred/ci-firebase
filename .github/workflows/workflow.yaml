@@ -8,8 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: git config user.email "workflow@github.actions" && git config user.name "GH Actions Ticker" && git checkout master && git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/seankhliao/ci-firebase
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBPAT }}
       - uses: docker://node:alpine
         with:
           entrypoint: /bin/sh
