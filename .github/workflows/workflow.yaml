@@ -1,0 +1,20 @@
+name: workflow
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: git config user.email "workflow@github.actions" && git config user.name "GH Actions Ticker" && git checkout master && git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/seankhliao/ci-firebase
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBPAT }}
+      - uses: docker://node:alpine
+        with:
+          entrypoint: /bin/sh
+          args: -c "npm show firebase-tools version > VERSION"
+      - run: git diff-index --quiet HEAD && git add VERSION && git commit -m $(cat VERSION) && git tag $(cat VERSION) && git push origin $(cat VERSION) && git push origin master
