@@ -1,5 +1,8 @@
 name: workflow
 on:
+  push:
+    branches:
+      - master
   schedule:
     - cron: "0 0 * * *"
 jobs:
@@ -12,4 +15,4 @@ jobs:
         with:
           entrypoint: /bin/sh
           args: -c "npm show firebase-tools version > VERSION"
-      - run: git diff-index --quiet HEAD && git add VERSION && git commit -m $(cat VERSION) && git tag $(cat VERSION) && git push origin $(cat VERSION) && git push origin master
+      - run: git diff-index --quiet HEAD && git add VERSION && git commit -m $(cat VERSION) && git tag $(cat VERSION) && git push origin $(cat VERSION) && git push origin master || true
